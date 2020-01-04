@@ -6,11 +6,14 @@ import sklearn
 import nltk
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-path = "/Users/evrim/PycharmProjects/cse3063f19p2_esahin_fcolak_fkuse_msenol/1150haber"
+numOfWords = int(input("Enter the number of words: "))
+wordSum = int(input("Enter the sum of the letter values: "))
+wordCounter = 0
+
+path = "1150haber"
 fileNames = []
 wordList = []
 wordLimit = 100000
-wordSum = 17
 letterValue = {'a': 1, 'b': 2, 'c': 3, 'ç': 4, 'd': 5, 'e': 6, 'f': 7, 'g': 8, 'ğ': 9, 'h': 10, 'ı': 11,
                'i': 12, 'j': 13, 'k': 14, 'l': 15, 'm': 16, 'n': 17, 'o': 18, 'ö': 19, 'p': 20, 'r': 21,
                's': 22, 'ş': 23, 't': 24, 'u': 25, 'ü': 26, 'v': 27, 'y': 28, 'z': 29}
@@ -22,8 +25,10 @@ tfidfVectorizer = TfidfVectorizer(decode_error='ignore')
 docTermMatrix = tfidfVectorizer.fit_transform((open(f, encoding="utf8").read() for f in fileNames))
 
 wordList = [word[0] for i, word in zip(range(0, wordLimit), tfidfVectorizer.vocabulary_.items())]
-
+i = 1
 for word in wordList:
+    if wordCounter == numOfWords:
+        break
     total = 0
     values = []
     cont = True
@@ -36,4 +41,6 @@ for word in wordList:
     if cont == False:
         continue
     if total == wordSum:
-        print(word, values, total)
+        print(i, ": ", word, values, total)
+        wordCounter = wordCounter + 1
+        i = i + 1
