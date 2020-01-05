@@ -4,6 +4,8 @@ import pandas as pd
 import numpy as np
 import sklearn
 import nltk
+import jpype
+
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 numOfWords = int(input("Enter the number of words: "))
