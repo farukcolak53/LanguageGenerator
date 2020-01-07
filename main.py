@@ -8,22 +8,11 @@ from jpype import (JClass, JString, getDefaultJVMPath, java, shutdownJVM,
                    startJVM)
 
 def generateNoun(noun):
-    ZEMBEREK_PATH: str = join('zemberek-full.jar')
-
-    startJVM(
-        getDefaultJVMPath(),
-        '-ea',
-        f'-Djava.class.path={ZEMBEREK_PATH}',
-        convertStrings=False
-    )
-
     number: List[JString] = [JString('A3sg'), JString('A3pl')]
     possessives: List[JString] = [
         JString('P1sg'), JString('P2sg'), JString('P3sg')
     ]
     cases: List[JString] = [JString('Dat'), JString('Loc'), JString('Abl')]
-
-    TurkishMorphology: JClass = JClass('zemberek.morphology.TurkishMorphology')
 
     morphology: TurkishMorphology = (
         TurkishMorphology.builder().setLexicon(noun).disableCache().build()
@@ -37,61 +26,8 @@ def generateNoun(noun):
                 for result in morphology.getWordGenerator().generate(
                         item, number_m, possessive_m, case_m
                 ):
-                    print(str(result.surface))
-                    #controller(str(result.surface))
-
-    shutdownJVM()
-    return
-
-def generateWerb(werb):
-    ZEMBEREK_PATH: str = join('zemberek-full.jar')
-
-    startJVM(
-        getDefaultJVMPath(),
-        '-ea',
-        f'-Djava.class.path={ZEMBEREK_PATH}',
-        convertStrings=False
-    )
-
-    TurkishMorphology: JClass = JClass('zemberek.morphology.TurkishMorphology')
-
-    positive_negatives: List[JString] = [JString(''), JString('Neg')]
-    times: List[JString] = [
-        'Imp', 'Aor', 'Past', 'Prog1', 'Prog2', 'Narr', 'Fut'
-    ]
-    people: List[JString] = [
-        'A1sg', 'A2sg', 'A3sg', 'A1pl', 'A2pl', 'A3pl'
-    ]
-
-    morphology: TurkishMorphology = (
-        TurkishMorphology.builder().setLexicon(werb).disableCache().build()
-    )
-    ##burda werbi mak meksiz hale getircez
-    stem = ""
-
-    for pos_neg in positive_negatives:
-        for time in times:
-            for person in people:
-                seq: java.util.ArrayList = java.util.ArrayList()
-                if pos_neg:
-                    seq.add(JString(pos_neg))
-                if time:
-                    seq.add(JString(time))
-                if person:
-                    seq.add(JString(person))
-                results = list(morphology.getWordGenerator().generate(
-                    JString(stem),
-                    seq
-                ))
-                if not results:
-                    print((
-                        f'Cannot generate Stem = ["{stem}"]'
-                        f' | Morphemes = {[str(morph) for morph in seq]}'
-                    ))
-                    continue
-                print(' '.join(str(result.surface) for result in results))
-
-    shutdownJVM()
+                   # print(str(result.surface))
+                    controller(str(result.surface))
     return
 
 def controller (word) :
@@ -108,6 +44,16 @@ def controller (word) :
         return
     if total == wordSum:
         print(word, values, total)
+    elif total < wordSum:
+
+
+        analysis: java.util.ArrayList = (
+            morphology.analyzeAndDisambiguate(word).bestAnalysis()
+        )
+        for i, analysis in enumerate(analysis, start=1):
+            if str(analysis.getPos()) == 'Noun':
+                generateNoun(word)
+            break
     return
 
 path = "1150haber"
@@ -127,7 +73,19 @@ docTermMatrix = tfidfVectorizer.fit_transform((open(f, encoding="utf8").read() f
 
 wordList = [word[0] for i, word in zip(range(0, wordLimit), tfidfVectorizer.vocabulary_.items())]
 
-for word in wordList:
-    controller(word)
 
-print('finished')
+ZEMBEREK_PATH: str = join('zemberek-full.jar')
+
+startJVM(
+    getDefaultJVMPath(),
+    '-ea',
+    f'-Djava.class.path={ZEMBEREK_PATH}',
+    convertStrings=False
+)
+TurkishMorphology: JClass = JClass('zemberek.morphology.TurkishMorphology')
+morphology: TurkishMorphology = TurkishMorphology.createWithDefaults()
+
+for word in wordList:
+   controller(word)
+#generateVerb("ağlayan")
+print('-----finished-----')
