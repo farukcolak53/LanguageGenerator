@@ -64,13 +64,13 @@ if __name__ == '__main__':
         pos: List[str] = []
 
         for i, analysis in enumerate(analysis, start=1):
-            """
+            
             print(
                 f'\nAnalysis {i}: {analysis}',
                 f'\nPrimary POS {i}: {analysis.getPos()}'
                 f'\nPrimary POS (Short Form) {i}: {analysis.getPos().shortForm}'
             )
-            """
+
             if str(analysis.getPos()) == 'Adjective':
                 adj_dict[adj_key_counter] = word
                 adj_key_counter = adj_key_counter + 1
