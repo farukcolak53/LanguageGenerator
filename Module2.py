@@ -1,11 +1,9 @@
 from random import randint
-from jpype import shutdownJVM
 from Reader import Reader
 
-
 class Module2:
-    if __name__ == '__main__':
 
+    def __init__(self):
         reader = Reader()  # Reader object
 
         path = "1150haber"  # A corpus of documents
@@ -24,7 +22,8 @@ class Module2:
         wordList = reader.readWords(path)
 
         # Stores the words inside appropriate dictionaries
-        adj_dict, noun_dict, verb_dict, adj_key_counter, noun_key_counter, verb_key_counter = reader.storeWords(adj_dict, noun_dict, verb_dict, adj_key_counter, noun_key_counter, verb_key_counter, wordList)
+        adj_dict, noun_dict, verb_dict, adj_key_counter, noun_key_counter, verb_key_counter = reader.storeWords(
+            adj_dict, noun_dict, verb_dict, adj_key_counter, noun_key_counter, verb_key_counter, wordList)
 
         sentenceCounter = 0  # Counts the number of generated sentences which has the requested value
 
@@ -44,7 +43,7 @@ class Module2:
                         mySum = noun_dict[noun][1] + adj_dict[adj][1] + verb_dict[verb][
                             1]  # Computes the value of the sentence
                         if mySum == sentenceTotal:  # If the value of the current sentence is equal to the input value
-                            print(sentenceCounter+1, ": ", sentence, " | ", mySum)
+                            print(sentenceCounter + 1, ": ", sentence, " | ", mySum)
                             sentenceCounter += 1
                             break
                     elif sentenceCounter == numOfSentences:  # If the number of sentences is reached to the input value, exit
@@ -52,4 +51,6 @@ class Module2:
                     else:
                         print("No matches found!")
                 break
-        shutdownJVM()
+
+
+
