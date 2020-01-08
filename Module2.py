@@ -20,8 +20,11 @@ class Module2:
         noun_key_counter = 1
         verb_key_counter = 1
 
-        # Reads the words inside the documents and stores them inside appropriate dictionaries
-        adj_dict, noun_dict, verb_dict, adj_key_counter, noun_key_counter, verb_key_counter = reader.readWords(adj_dict, noun_dict, verb_dict, adj_key_counter, noun_key_counter, verb_key_counter, path)
+        # It will store the words
+        wordList = reader.readWords(path)
+
+        # Stores the words inside appropriate dictionaries
+        adj_dict, noun_dict, verb_dict, adj_key_counter, noun_key_counter, verb_key_counter = reader.storeWords(adj_dict, noun_dict, verb_dict, adj_key_counter, noun_key_counter, verb_key_counter, wordList)
 
         sentenceCounter = 0  # Counts the number of generated sentences which has the requested value
 
