@@ -4,7 +4,7 @@ from jpype import JClass, getDefaultJVMPath, java, shutdownJVM, startJVM
 
 class Zemberek:
 
-    ZEMBEREK_PATH: str = join('bin', 'zemberek-full.jar')
+    ZEMBEREK_PATH: str = join('zemberek-full.jar')
 
     startJVM(
         getDefaultJVMPath(),
